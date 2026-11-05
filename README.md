@@ -2,9 +2,8 @@
 
 CI image for Pulumi programs that run on Bun.
 
-Base image: `pulumi/pulumi-nodejs-26:3.274.0`. The build adds:
+Base image: `pulumi/pulumi-nodejs-26:3.274.0`. Bun comes from that image. The build adds:
 
-- Bun 1.4.4 on `PATH`
 - Node dependencies from `package.json`, including the Yandex provider SDK generated from `registry.terraform.io/yandex-cloud/yandex` 0.239.0
 - Pulumi plugins: `kubernetes` 4.34.2 and `terraform-provider` 1.1.0
 
