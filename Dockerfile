@@ -12,18 +12,20 @@ ENV PULUMI_HOME=/pulumi-home \
 
 WORKDIR /opt/pulumi-deps
 
-COPY package.json Pulumi.yaml ./
+COPY package.json bun.lock Pulumi.yaml ./
 COPY sdks/yandex ./sdks/yandex
 
-# bun install, not npm. --ignore-scripts: pulumi package add rewrites
-# sdks/yandex, so the SDK postinstall runs after that, not during install.
+# bun install, not npm. bun.lock is the transio lock: its tarball URLs
+# pointed at a local proxy, so they are rewritten to registry.npmjs.org.
+# --frozen-lockfile keeps those versions. --ignore-scripts: pulumi package
+# add rewrites sdks/yandex, so the SDK postinstall runs after that.
 # --linker hoisted: CI symlinks this node_modules onto the checkout, which
 # needs a normal layout rather than Bun's isolated one.
 RUN apt-get update \
  && apt-get install -y --no-install-recommends unzip \
  && rm -rf /var/lib/apt/lists/* \
  && bun --version \
- && bun install --ignore-scripts --linker hoisted --no-save \
+ && bun install --ignore-scripts --linker hoisted --frozen-lockfile \
       --registry https://registry.npmjs.org \
  && pulumi plugin install resource kubernetes 4.34.2 \
  && pulumi plugin install resource terraform-provider 1.1.0 \

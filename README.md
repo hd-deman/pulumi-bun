@@ -13,12 +13,12 @@ Base image: `pulumi/pulumi-nodejs-26:3.274.0`. Bun comes from that image. The bu
 
 GitHub Actions publishes:
 
-- `ghcr.io/hd-deman/pulumi-bun:3.274.0-1`
+- `ghcr.io/hd-deman/pulumi-bun:3.274.0-2`
 - `ghcr.io/hd-deman/pulumi-bun:latest`
 
-`3.274.0-1` vendors `terraform-provider-yandex` 0.239.0 at `/opt/terraform-providers/terraform-provider-yandex` and points the SDK at that file.
+`3.274.0-2` installs from `bun.lock` and vendors `terraform-provider-yandex` 0.239.0 at `/opt/terraform-providers/terraform-provider-yandex`.
 
-The Pulumi CLI in the image is 3.274.0. The suffix is a new tag so a runner that already pulled `3.274.0` does not keep that copy.
+The Pulumi CLI in the image is 3.274.0. The lock resolves `@pulumi/pulumi` 3.273.0. The suffix is a new tag so a runner that already pulled `3.274.0-1` does not keep that copy.
 
 ## Build
 
