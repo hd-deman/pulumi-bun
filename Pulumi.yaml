@@ -1,0 +1,9 @@
+name: pulumi-bun
+runtime: bun
+packages:
+  yandex:
+    source: terraform-provider
+    version: 1.1.0
+    parameters:
+      - registry.terraform.io/yandex-cloud/yandex
+      - 0.239.0
