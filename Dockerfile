@@ -27,6 +27,13 @@ COPY sdks/yandex ./sdks/yandex
 
 RUN npm install --ignore-scripts --no-audit --no-fund --no-package-lock \
       --registry https://registry.npmjs.org \
- && node sdks/yandex/scripts/postinstall.js \
  && pulumi plugin install resource kubernetes 4.34.2 \
- && pulumi plugin install resource terraform-provider 1.1.0
+ && pulumi plugin install resource terraform-provider 1.1.0 \
+ && mkdir -p /opt/terraform-providers \
+ && curl -fsSL -o /tmp/yandex.zip \
+      https://github.com/yandex-cloud/terraform-provider-yandex/releases/download/v0.239.0/terraform-provider-yandex_0.239.0_linux_amd64.zip \
+ && unzip -p /tmp/yandex.zip terraform-provider-yandex_v0.239.0 > /opt/terraform-providers/terraform-provider-yandex \
+ && chmod 755 /opt/terraform-providers/terraform-provider-yandex \
+ && rm -f /tmp/yandex.zip \
+ && pulumi package add terraform-provider /opt/terraform-providers/terraform-provider-yandex --non-interactive \
+ && PATH="/opt/pulumi-deps/node_modules/.bin:${PATH}" node sdks/yandex/scripts/postinstall.js

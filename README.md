@@ -14,8 +14,10 @@ Base image: `pulumi/pulumi-nodejs-26:3.273.0`. The build adds:
 
 GitHub Actions publishes:
 
-- `ghcr.io/hd-deman/pulumi-bun:3.273.0`
+- `ghcr.io/hd-deman/pulumi-bun:3.273.0-1`
 - `ghcr.io/hd-deman/pulumi-bun:latest`
+
+`3.273.0-1` vendors `terraform-provider-yandex` 0.239.0 at `/opt/terraform-providers/terraform-provider-yandex` and points the SDK at that file.
 
 The tag matches the Pulumi CLI in the base image.
 
