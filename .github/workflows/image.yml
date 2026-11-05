@@ -32,7 +32,7 @@ jobs:
           sbom: false
           push: true
           tags: |
-            ghcr.io/hd-deman/pulumi-bun:3.274.0
+            ghcr.io/hd-deman/pulumi-bun:3.274.0-1
             ghcr.io/hd-deman/pulumi-bun:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max

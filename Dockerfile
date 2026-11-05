@@ -2,7 +2,9 @@ ARG PULUMI_IMAGE=pulumi/pulumi-nodejs-26:3.274.0
 
 FROM ${PULUMI_IMAGE}
 
-USER root
+# The base image is root and has no USER. apt-get and the writes under
+# /opt and /pulumi-home need root. The job process is the node user that
+# already exists in the Node base image.
 
 ENV PULUMI_HOME=/pulumi-home \
     PULUMI_SKIP_UPDATE_CHECK=true \
@@ -13,11 +15,15 @@ WORKDIR /opt/pulumi-deps
 COPY package.json Pulumi.yaml ./
 COPY sdks/yandex ./sdks/yandex
 
+# bun install, not npm. --ignore-scripts: pulumi package add rewrites
+# sdks/yandex, so the SDK postinstall runs after that, not during install.
+# --linker hoisted: CI symlinks this node_modules onto the checkout, which
+# needs a normal layout rather than Bun's isolated one.
 RUN apt-get update \
  && apt-get install -y --no-install-recommends unzip \
  && rm -rf /var/lib/apt/lists/* \
  && bun --version \
- && npm install --ignore-scripts --no-audit --no-fund --no-package-lock \
+ && bun install --ignore-scripts --linker hoisted --no-save \
       --registry https://registry.npmjs.org \
  && pulumi plugin install resource kubernetes 4.34.2 \
  && pulumi plugin install resource terraform-provider 1.1.0 \
@@ -28,4 +34,7 @@ RUN apt-get update \
  && chmod 755 /opt/terraform-providers/terraform-provider-yandex \
  && rm -f /tmp/yandex.zip \
  && pulumi package add terraform-provider /opt/terraform-providers/terraform-provider-yandex --non-interactive \
- && PATH="/opt/pulumi-deps/node_modules/.bin:${PATH}" node sdks/yandex/scripts/postinstall.js
+ && PATH="/opt/pulumi-deps/node_modules/.bin:${PATH}" node sdks/yandex/scripts/postinstall.js \
+ && chown -R node:node /opt/pulumi-deps /pulumi-home /opt/terraform-providers
+
+USER node
