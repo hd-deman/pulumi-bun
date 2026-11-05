@@ -1,0 +1,25 @@
+name: visibility
+
+on:
+  workflow_dispatch:
+
+permissions:
+  packages: write
+
+jobs:
+  public:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Make the package public
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -eux
+          gh api --method PATCH \
+            -H "Accept: application/vnd.github+json" \
+            /users/hd-deman/packages/container/pulumi-bun \
+            -f visibility=public
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            /users/hd-deman/packages/container/pulumi-bun \
+            --jq .visibility
