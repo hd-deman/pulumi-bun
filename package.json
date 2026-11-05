@@ -3,7 +3,7 @@
   "private": true,
   "dependencies": {
     "@pulumi/kubernetes": "4.34.2",
-    "@pulumi/pulumi": "3.273.0",
+    "@pulumi/pulumi": "3.274.0",
     "@pulumi/yandex": "file:sdks/yandex",
     "@types/ini": "^4.1.1",
     "commander": "^15.0.0",

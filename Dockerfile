@@ -1,4 +1,4 @@
-ARG PULUMI_IMAGE=pulumi/pulumi-nodejs-26:3.273.0
+ARG PULUMI_IMAGE=pulumi/pulumi-nodejs-26:3.274.0
 
 FROM ${PULUMI_IMAGE}
 
